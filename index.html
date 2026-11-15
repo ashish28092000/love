@@ -1,12 +1,166 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>AM &#x2764;</title>
-  </head>
-  <body>
-    <h1><center><u><big>Ashish</big></u></center></h1>
-    <center><h2>&#x2764;</h2></center>
-    <h1><center>&#128149;<u>Madhu</u> &#128149;</center></h1>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ashish ❤️ Madhu</title>
+  <!-- Google Fonts for romantic typography -->
+  <link href="https://googleapis.com" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Main Glass Card */
+    .card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      padding: 50px 40px;
+      border-radius: 25px;
+      box-shadow: 0 15px 35px rgba(214, 51, 108, 0.2);
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+      z-index: 10;
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    .name {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3.5rem;
+      color: #d6336c;
+      text-shadow: 2px 2px 4px rgba(214, 51, 108, 0.15);
+    }
+
+    /* Beating Heart Animation */
+    .heart {
+      font-size: 3rem;
+      margin: 15px 0;
+      display: inline-block;
+      animation: heartbeat 1.2s infinite;
+    }
+
+    .subtitle {
+      margin-top: 15px;
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    /* Interactive Button */
+    .btn {
+      margin-top: 25px;
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      color: white;
+      background: linear-gradient(45deg, #ff4b72, #ff758c);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255, 75, 114, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 75, 114, 0.6);
+    }
+
+    /* Hidden Love Note */
+    .love-note {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: #b5174d;
+      font-weight: 500;
+      display: none;
+      animation: fadeIn 0.8s ease;
+    }
+
+    /* Floating Background Hearts */
+    .bg-heart {
+      position: absolute;
+      bottom: -50px;
+      font-size: 1.5rem;
+      opacity: 0.6;
+      animation: floatUp 6s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.25); }
+      50% { transform: scale(1); }
+      75% { transform: scale(1.15); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+      100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="name">Ashish</div>
+    <div class="heart">❤️</div>
+    <div class="name">Madhu</div>
+    
+    <p class="subtitle">Together is my favorite place to be ✨</p>
+    
+    <button class="btn" onclick="showMessage()">Tap for a Surprise 💌</button>
+    <p class="love-note" id="note">Every moment with you is special. Forever & always! 💕</p>
+  </div>
+
+  <script>
+    function showMessage() {
+      const note = document.getElementById('note');
+      note.style.display = 'block';
+      
+      // Burst extra floating hearts on click
+      for (let i = 0; i < 15; i++) {
+        createHeart();
+      }
+    }
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('bg-heart');
+      const emojis = ['❤️', '💖', '💕', '💗', '💓'];
+      heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+      heart.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 6000);
+    }
+
+    // Continuously generate gentle floating hearts
+    setInterval(createHeart, 600);
+  </script>
+
+</body>
 </html>
