@@ -57,8 +57,11 @@
       text-align: center;
       width: 100%;
       transform-style: preserve-3d;
-      transition: transform 0.15s ease-out;
+      transition: transform 0.3s ease;
       animation: auto3DFloat 5s ease-in-out infinite, cardGlitterShimmer 2.5s linear infinite;
+    }
+    .card:hover, .card:active {
+      transform: rotateX(8deg) rotateY(10deg) scale(1.03);
     }
     .card::before {
       content: "";
@@ -68,22 +71,17 @@
       border: 1.5px solid rgba(201, 154, 46, 0.5);
       pointer-events: none;
     }
-    .glare {
+    .card::after {
+      content: "";
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: inherit;
-      background: radial-gradient(
-        circle at var(--glare-x, 30%) var(--glare-y, 30%),
-        rgba(255, 245, 190, 0.75) 0%,
-        rgba(212, 175, 55, 0.14) 40%,
-        transparent 70%
-      );
-      opacity: var(--glare-opacity, 0.5);
+      top: -50%;
+      left: -150%;
+      width: 80%;
+      height: 200%;
+      background: linear-gradient(to right, transparent 0%, rgba(255, 250, 210, 0.55) 50%, transparent 100%);
+      transform: rotate(25deg);
+      animation: glareSweep 4s ease-in-out infinite;
       pointer-events: none;
-      mix-blend-mode: soft-light;
     }
     .name-box {
       position: relative;
@@ -168,16 +166,23 @@
       animation: pulseHint 2s ease-in-out infinite;
       pointer-events: none;
       white-space: nowrap;
-      transition: opacity 0.4s ease;
     }
-    .bg-heart {
+    .float-item {
       position: fixed;
       bottom: -40px;
-      opacity: 0.85;
-      animation: floatUp linear forwards;
+      font-size: 1.2rem;
+      opacity: 0;
       pointer-events: none;
       z-index: 2;
+      animation: floatUp 6s linear infinite;
     }
+    .f1 { left: 12%; animation-delay: 0s; }
+    .f2 { left: 28%; animation-delay: 1.5s; font-size: 1rem; }
+    .f3 { left: 45%; animation-delay: 3s; }
+    .f4 { left: 68%; animation-delay: 0.8s; font-size: 1.3rem; }
+    .f5 { left: 84%; animation-delay: 2.2s; }
+    .f6 { left: 92%; animation-delay: 4s; font-size: 1rem; }
+
     @keyframes bgGlitterShimmer {
       0% { background-position: 0 0, 12px 15px, 6px 8px, center; }
       50% { background-position: 13px 13px, 29px 32px, 15px 17px, center; }
@@ -191,6 +196,11 @@
     @keyframes auto3DFloat {
       0%, 100% { transform: rotateX(6deg) rotateY(-8deg); }
       50% { transform: rotateX(-5deg) rotateY(8deg); }
+    }
+    @keyframes glareSweep {
+      0% { left: -150%; }
+      45% { left: 160%; }
+      100% { left: 160%; }
     }
     @keyframes heavyGlitter {
       0% { background-position: 0 0, 7px 9px, 4px 3px, 220% center; }
@@ -210,18 +220,28 @@
       50% { opacity: 1; transform: scale(1.02); }
     }
     @keyframes floatUp {
-      0% { transform: translateY(0); opacity: 0.85; }
+      0% { transform: translateY(0); opacity: 0; }
+      15% { opacity: 0.85; }
+      85% { opacity: 0.85; }
       100% { transform: translateY(-110vh); opacity: 0; }
     }
   </style>
 </head>
-<body>
-  <audio id="bgMusic" autoplay loop playsinline preload="auto"><source src="song.mp3" type="audio/mpeg"></audio>
-  <button class="music-btn" id="musicBtn" aria-label="Toggle Music" title="Play/Pause Music">🔇</button>
+<body onclick="var m=document.getElementById('bgMusic'); if(m.paused){m.play(); this.querySelector('.music-btn').innerText='🎵'; this.querySelector('.music-hint').style.display='none';}">
+  <audio id="bgMusic" autoplay loop playsinline preload="auto">
+    <source src="song.mp3" type="audio/mpeg">
+  </audio>
+  <button class="music-btn" aria-label="Toggle Music" title="Play/Pause Music" onclick="event.stopPropagation(); var m=document.getElementById('bgMusic'); if(m.paused){m.play(); this.innerText='🎵'; document.querySelector('.music-hint').style.display='none';}else{m.pause(); this.innerText='🔇';}">🔇</button>
+
+  <span class="float-item f1">💛</span>
+  <span class="float-item f2">✨</span>
+  <span class="float-item f3">💛</span>
+  <span class="float-item f4">✦</span>
+  <span class="float-item f5">💛</span>
+  <span class="float-item f6">✨</span>
 
   <div class="card-wrapper">
-    <div class="card" id="tiltCard">
-      <div class="glare" id="cardGlare"></div>
+    <div class="card">
       <div class="name-box">
         <span class="sparkle s1">✦</span>
         <span class="sparkle s2">✦</span>
@@ -233,107 +253,13 @@
       </div>
       <br>
       <div class="heart-wrap">
-        <svg class="gold-heart-svg" viewBox="0 0 32 29.6" xmlns="http://w3.org">
-          <defs>
-            <radialGradient id="gold3DHeart" cx="32%" cy="28%" r="70%">
-              <stop offset="0%" stop-color="#fff9cc" />
-              <stop offset="25%" stop-color="#f7d060" />
-              <stop offset="65%" stop-color="#c99316" />
-              <stop offset="100%" stop-color="#6e4700" />
-            </radialGradient>
-          </defs>
-          <path fill="url(#gold3DHeart)" d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
-        </svg>
-      </div>
-      <br>
-      <div class="name-box">
-        <span class="sparkle s1">✨</span>
-        <span class="sparkle s2">✦</span>
-        <span class="sparkle s3">✦</span>
-        <span class="sparkle s4">✨</span>
-        <span class="sparkle s5">✦</span>
-        <span class="sparkle s6">✦</span>
-        <div class="name">Madhu</div>
-      </div>
-    </div>
-  </div>
-  
+✨
+✦
+✦
+✨
+✦
+✦
+Madhu
+
+
 Tap anywhere for music ✨
-var music = document.getElementById('bgMusic');
-var musicBtn = document.getElementById('musicBtn');
-var musicHint = document.getElementById('musicHint');
-var card = document.getElementById('tiltCard');
-var glare = document.getElementById('cardGlare');
-var isPlaying = false;
-function update3DCard(clientX, clientY) {
-card.style.animation = 'cardGlitterShimmer 2.5s linear infinite';
-var rect = card.getBoundingClientRect();
-var x = clientX - rect.left;
-var y = clientY - rect.top;
-var rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -15;
-var rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 15;
-card.style.transform = 'rotateX(' + rotateX.toFixed(2) + 'deg) rotateY(' + rotateY.toFixed(2) + 'deg)';
-glare.style.setProperty('--glare-x', ((x / rect.width) * 100) + '%');
-glare.style.setProperty('--glare-y', ((y / rect.height) * 100) + '%');
-glare.style.setProperty('--glare-opacity', '0.85');
-}
-function reset3DCard() {
-card.style.transform = '';
-card.style.animation = 'auto3DFloat 5s ease-in-out infinite, cardGlitterShimmer 2.5s linear infinite';
-glare.style.setProperty('--glare-opacity', '0.5');
-}
-document.addEventListener('mousemove', function(e) {
-update3DCard(e.clientX, e.clientY);
-});
-document.addEventListener('mouseleave', reset3DCard);
-document.addEventListener('touchmove', function(e) {
-if (e.touches && e.touches.length) {
-update3DCard(e.touches[0].clientX, e.touches[0].clientY);
-}
-}, { passive: true });
-document.addEventListener('touchend', reset3DCard);
-function createHeart() {
-var heart = document.createElement('div');
-heart.classList.add('bg-heart');
-var items = ['💛', '✨', '✦', '💫'];
-heart.innerText = items[Math.floor(Math.random() * items.length)];
-heart.style.left = (Math.random() * 94 + 2) + 'vw';
-var duration = Math.random() * 3 + 4;
-heart.style.animationDuration = duration + 's';
-heart.style.fontSize = (Math.random() * 0.9 + 0.85) + 'rem';
-document.body.appendChild(heart);
-setTimeout(function() { heart.remove(); }, duration * 1000);
-}
-setInterval(createHeart, 500);
-function playMusic() {
-if (!isPlaying) {
-music.play().then(function() {
-isPlaying = true;
-musicBtn.innerText = '🎵';
-if (musicHint) {
-musicHint.style.opacity = '0';
-setTimeout(function() { musicHint.style.display = 'none'; }, 400);
-}
-}).catch(function() {});
-}
-}
-window.addEventListener('load', playMusic);
-document.addEventListener('touchstart', playMusic, { once: true, passive: true });
-document.addEventListener('click', playMusic, { once: true });
-musicBtn.addEventListener('click', function(e) {
-e.stopPropagation();
-if (isPlaying) {
-music.pause();
-isPlaying = false;
-musicBtn.innerText = '🔇';
-} else {
-music.play().then(function() {
-isPlaying = true;
-musicBtn.innerText = '🎵';
-if (musicHint) {
-musicHint.style.opacity = '0';
-setTimeout(function() { musicHint.style.display = 'none'; }, 400);
-}
-}).catch(function() {});
-}
-});
