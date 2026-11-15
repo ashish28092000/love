@@ -54,6 +54,30 @@
       animation: heartbeat 1.2s infinite;
     }
 
+    /* Subtle Music Toggle Button in Corner */
+    .music-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(214, 51, 108, 0.2);
+      z-index: 20;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.2s;
+    }
+
+    .music-btn:hover {
+      transform: scale(1.1);
+    }
+
     /* Floating Background Hearts */
     .bg-heart {
       position: absolute;
@@ -82,7 +106,15 @@
     }
   </style>
 </head>
-<body onclick="burstHearts()">
+<body onclick="handleScreenClick()">
+
+  <!-- Hidden Audio Player -->
+  <audio id="bgMusic" loop>
+    <source src="song.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Corner Music Mute/Play Button -->
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic(event)" title="Play/Pause Music">🔇</button>
 
   <div class="card">
     <div class="name">Ashish</div>
@@ -91,6 +123,38 @@
   </div>
 
   <script>
+    const music = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    let isPlaying = false;
+
+    function handleScreenClick() {
+      // Burst extra hearts on click
+      for (let i = 0; i < 10; i++) {
+        createHeart();
+      }
+
+      // Start music automatically on first tap/click anywhere
+      if (!isPlaying) {
+        music.play().then(() => {
+          isPlaying = true;
+          musicBtn.innerText = '🎵';
+        }).catch(() => {});
+      }
+    }
+
+    function toggleMusic(event) {
+      event.stopPropagation(); // Prevents triggering screen click twice
+      if (isPlaying) {
+        music.pause();
+        isPlaying = false;
+        musicBtn.innerText = '🔇';
+      } else {
+        music.play();
+        isPlaying = true;
+        musicBtn.innerText = '🎵';
+      }
+    }
+
     function createHeart() {
       const heart = document.createElement('div');
       heart.classList.add('bg-heart');
@@ -104,13 +168,6 @@
       setTimeout(() => {
         heart.remove();
       }, 6000);
-    }
-
-    // Burst extra hearts when clicking anywhere on the screen
-    function burstHearts() {
-      for (let i = 0; i < 10; i++) {
-        createHeart();
-      }
     }
 
     // Continuously generate gentle floating hearts
