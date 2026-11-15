@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Ashish ❤️ Madhu</title>
-  <!-- Google Fonts for romantic typography -->
   <link rel="preconnect" href="https://googleapis.com">
   <link rel="preconnect" href="https://gstatic.com" crossorigin>
   <link href="https://googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
@@ -30,20 +29,44 @@
       justify-content: center;
       align-items: center;
       padding: env(safe-area-inset-top, 16px) env(safe-area-inset-right, 16px) env(safe-area-inset-bottom, 16px) env(safe-area-inset-left, 16px);
-      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
       position: relative;
       cursor: pointer;
       font-family: 'Poppins', sans-serif;
     }
 
-    /* Responsive Glass Card */
+    /* Twinkling Stars */
+    .star {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: twinkle var(--duration) ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* Shooting Star */
+    .shooting-star {
+      position: absolute;
+      top: 15%;
+      left: 80%;
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 1), transparent);
+      transform: rotate(-35deg);
+      opacity: 0;
+      animation: shoot 6s linear infinite;
+      pointer-events: none;
+    }
+
+    /* Dark Frosted Glass Card */
     .card {
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(20, 22, 38, 0.65);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       padding: clamp(32px, 7vh, 65px) clamp(24px, 6vw, 55px);
       border-radius: clamp(20px, 4vw, 28px);
-      box-shadow: 0 15px 35px rgba(214, 51, 108, 0.22);
+      box-shadow: 0 0 40px rgba(255, 105, 180, 0.25), inset 0 0 20px rgba(255, 255, 255, 0.05);
       text-align: center;
       width: min(90vw, 420px);
       max-height: 85dvh;
@@ -52,41 +75,44 @@
       justify-content: center;
       align-items: center;
       z-index: 10;
-      border: 2px solid rgba(255, 255, 255, 0.95);
+      border: 1.5px solid rgba(255, 182, 193, 0.35);
       animation: fadeIn 1.2s ease-in-out;
     }
 
-    /* Fluid Names Scaling */
+    /* Glowing Neon Rose-Gold Names */
     .name {
       font-family: 'Dancing Script', cursive;
       font-size: clamp(2.8rem, 9vw, 4.2rem);
       line-height: 1.15;
-      color: #d6336c;
-      text-shadow: 2px 2px 4px rgba(214, 51, 108, 0.15);
+      color: #ff9ebb;
+      text-shadow: 0 0 12px rgba(255, 105, 180, 0.8), 0 0 25px rgba(255, 20, 147, 0.5);
       word-break: break-word;
     }
 
-    /* Fluid Beating Heart */
+    /* Glowing Beating Heart */
     .heart {
       font-size: clamp(2.4rem, 7vw, 3.6rem);
       margin: clamp(12px, 3vh, 22px) 0;
       display: inline-block;
+      filter: drop-shadow(0 0 15px rgba(255, 50, 100, 0.85));
       animation: heartbeat 1.2s infinite;
     }
 
-    /* Responsive Music Toggle Button */
+    /* Music Toggle Button */
     .music-btn {
       position: fixed;
       top: max(16px, env(safe-area-inset-top, 16px));
       right: max(16px, env(safe-area-inset-right, 16px));
-      background: rgba(255, 255, 255, 0.9);
-      border: 2px solid rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(255, 182, 193, 0.4);
       border-radius: 50%;
       width: clamp(42px, 6vw, 50px);
       height: clamp(42px, 6vw, 50px);
       font-size: clamp(1.1rem, 3vw, 1.4rem);
+      color: #fff;
       cursor: pointer;
-      box-shadow: 0 5px 15px rgba(214, 51, 108, 0.2);
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.3);
       z-index: 20;
       display: flex;
       justify-content: center;
@@ -98,45 +124,51 @@
       transform: scale(1.08);
     }
 
-    /* Responsive Tap Hint */
+    /* Tap Hint */
     .tap-hint {
       position: fixed;
       bottom: max(20px, env(safe-area-inset-bottom, 20px));
       font-size: clamp(0.8rem, 2.5vw, 0.95rem);
-      color: #b5174d;
-      background: rgba(255, 255, 255, 0.8);
+      color: #ffd1dc;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 182, 193, 0.3);
       padding: 8px 18px;
       border-radius: 25px;
-      box-shadow: 0 4px 12px rgba(214, 51, 108, 0.12);
       z-index: 15;
       animation: pulseHint 2s infinite;
       pointer-events: none;
       white-space: nowrap;
     }
 
-    /* Floating Background Hearts */
+    /* Floating Hearts on Tap */
     .bg-heart {
       position: absolute;
       bottom: -50px;
-      opacity: 0.65;
+      opacity: 0.85;
+      filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.6));
       animation: floatUp 6s linear infinite;
       pointer-events: none;
       will-change: transform, opacity;
     }
 
-    /* Landscape Mobile Adjustment */
     @media (max-height: 480px) and (orientation: landscape) {
       .card {
         padding: 18px 36px;
         width: min(75vw, 380px);
       }
-      .name {
-        font-size: 2.4rem;
-      }
-      .heart {
-        font-size: 2rem;
-        margin: 6px 0;
-      }
+      .name { font-size: 2.4rem; }
+      .heart { font-size: 2rem; margin: 6px 0; }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    @keyframes shoot {
+      0% { transform: translate(0, 0) rotate(-35deg); opacity: 1; }
+      15% { transform: translate(-500px, 350px) rotate(-35deg); opacity: 0; }
+      100% { transform: translate(-500px, 350px) rotate(-35deg); opacity: 0; }
     }
 
     @keyframes heartbeat {
@@ -152,35 +184,35 @@
     }
 
     @keyframes pulseHint {
-      0%, 100% { opacity: 0.7; }
+      0%, 100% { opacity: 0.6; }
       50% { opacity: 1; }
     }
 
     @keyframes floatUp {
-      0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.9; }
       100% { transform: translateY(-115vh) rotate(360deg); opacity: 0; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Cross-Platform Audio Player -->
   <audio id="bgMusic" loop playsinline preload="auto">
     <source src="song.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- Corner Music Mute/Play Button -->
   <button class="music-btn" id="musicBtn" aria-label="Toggle Music" title="Play/Pause Music">🔇</button>
 
-  <!-- Main Card -->
+  <!-- Shooting Star -->
+  <div class="shooting-star"></div>
+
+  <!-- Main Dark Glass Card -->
   <div class="card">
     <div class="name">Ashish</div>
     <div class="heart">❤️</div>
     <div class="name">Madhu</div>
   </div>
 
-  <!-- Tap Hint -->
-  <div class="tap-hint" id="tapHint">Tap anywhere for music 🎵</div>
+  <div class="tap-hint" id="tapHint">Tap anywhere for music ✨</div>
 
   <script>
     const music = document.getElementById('bgMusic');
@@ -188,6 +220,20 @@
     const tapHint = document.getElementById('tapHint');
     let isPlaying = false;
     let lastInteraction = 0;
+
+    // Generate 90 Twinkling Stars in the Night Sky
+    for (let i = 0; i < 90; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      const size = Math.random() * 2.5 + 1;
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      star.style.top = Math.random() * 100 + 'vh';
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
+      star.style.animationDelay = (Math.random() * 3) + 's';
+      document.body.appendChild(star);
+    }
 
     function startAudio() {
       if (!isPlaying) {
@@ -200,27 +246,20 @@
     }
 
     function handleInteraction(e) {
-      // Ignore if clicking the dedicated music toggle button
       if (e.target.closest('#musicBtn')) return;
-
-      // Prevent duplicate firing on mobile devices (touchstart + click)
       const now = Date.now();
       if (now - lastInteraction < 250) return;
       lastInteraction = now;
 
-      // Burst extra hearts
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 12; i++) {
         createHeart();
       }
-
       startAudio();
     }
 
-    // Listen to both mobile touch and desktop click
     document.body.addEventListener('touchstart', handleInteraction, { passive: true });
     document.body.addEventListener('click', handleInteraction);
 
-    // Dedicated Music Toggle Button
     musicBtn.addEventListener('click', function(e) {
       e.stopPropagation();
       if (isPlaying) {
@@ -239,7 +278,7 @@
     function createHeart() {
       const heart = document.createElement('div');
       heart.classList.add('bg-heart');
-      const emojis = ['❤️', '💖', '💕', '💗', '💓'];
+      const emojis = ['❤️', '💖', '✨', '💕', '💫'];
       heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
       heart.style.left = (Math.random() * 94 + 2) + 'vw';
       heart.style.animationDuration = (Math.random() * 3 + 3.5) + 's';
@@ -251,8 +290,7 @@
       }, 6500);
     }
 
-    // Continuously generate gentle floating hearts
-    setInterval(createHeart, 650);
+    setInterval(createHeart, 750);
   </script>
 
 </body>
