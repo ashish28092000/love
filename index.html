@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Ashish 💛 Madhu</title>
   <link rel="preconnect" href="https://googleapis.com">
   <link rel="preconnect" href="https://gstatic.com" crossorigin>
@@ -10,17 +10,15 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
     html, body { width: 100%; height: 100%; min-height: 100vh; min-height: 100dvh; overflow: hidden; }
-    
-    /* Golden Glitter Outer Background */
     body {
       display: flex;
       justify-content: center;
       align-items: center;
       background-color: #f3d999;
       background-image:
-        radial-gradient(circle, rgba(255, 255, 255, 0.85) 1.2px, transparent 1.6px),
+        radial-gradient(circle, rgba(255, 255, 255, 0.9) 1.2px, transparent 1.6px),
         radial-gradient(circle, rgba(212, 175, 55, 0.55) 1.5px, transparent 2px),
-        radial-gradient(circle, rgba(255, 245, 180, 0.9) 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(255, 245, 180, 0.95) 1px, transparent 1.5px),
         radial-gradient(circle at center, #fffdf7 0%, #f5e2b8 55%, #e4c17a 100%);
       background-size: 26px 26px, 34px 34px, 19px 19px, 100% 100%;
       background-position: 0 0, 12px 15px, 6px 8px, center;
@@ -30,7 +28,6 @@
       font-family: 'Poppins', sans-serif;
       perspective: 1100px;
     }
-
     .card-wrapper {
       z-index: 10;
       width: min(88vw, 400px);
@@ -38,15 +35,13 @@
       justify-content: center;
       align-items: center;
     }
-
-    /* 3D Physical Beveled Card with Inner Gold Glitter */
     .card {
       position: relative;
       overflow: hidden;
       background-color: #fdf8ec;
       background-image:
-        radial-gradient(circle, rgba(212, 175, 55, 0.35) 1.2px, transparent 1.6px),
-        radial-gradient(circle, rgba(255, 223, 100, 0.7) 1.4px, transparent 1.8px),
+        radial-gradient(circle, rgba(212, 175, 55, 0.38) 1.2px, transparent 1.6px),
+        radial-gradient(circle, rgba(255, 223, 100, 0.75) 1.4px, transparent 1.8px),
         radial-gradient(circle, rgba(184, 134, 11, 0.25) 1px, transparent 1.5px),
         linear-gradient(145deg, #ffffff 0%, #fcf4e1 100%);
       background-size: 18px 18px, 25px 25px, 14px 14px, 100% 100%;
@@ -65,7 +60,6 @@
       transition: transform 0.15s ease-out;
       animation: auto3DFloat 5s ease-in-out infinite, cardGlitterShimmer 2.5s linear infinite;
     }
-
     .card::before {
       content: "";
       position: absolute;
@@ -74,7 +68,6 @@
       border: 1.5px solid rgba(201, 154, 46, 0.5);
       pointer-events: none;
     }
-
     .glare {
       position: absolute;
       top: 0;
@@ -92,14 +85,11 @@
       pointer-events: none;
       mix-blend-mode: soft-light;
     }
-
     .name-box {
       position: relative;
       display: inline-block;
       transform: translateZ(35px);
     }
-
-    /* Heavy Golden Glitter Texture Inside Letters */
     .name {
       font-family: 'Great Vibes', cursive;
       font-size: clamp(3.6rem, 11.5vw, 5rem);
@@ -118,7 +108,6 @@
       filter: drop-shadow(0 2px 3px rgba(110, 69, 0, 0.4)) drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
       animation: heavyGlitter 2.4s linear infinite;
     }
-
     .sparkle {
       position: absolute;
       color: #d49b1a;
@@ -132,8 +121,6 @@
     .s4 { bottom: 4px; left: -6px; animation-delay: 0.2s; font-size: 0.9rem; }
     .s5 { top: -6px; left: 45%; animation-delay: 0.6s; font-size: 0.95rem; }
     .s6 { bottom: -4px; left: 52%; animation-delay: 1s; font-size: 0.85rem; }
-
-    /* 3D Sculpted Glossy Gold Heart */
     .heart-wrap {
       margin: 10px 0;
       display: inline-flex;
@@ -143,12 +130,10 @@
       animation: heartbeat 1.4s ease-in-out infinite;
       filter: drop-shadow(0 8px 12px rgba(138, 90, 0, 0.45));
     }
-
     .gold-heart-svg {
       width: clamp(54px, 13vw, 68px);
       height: clamp(54px, 13vw, 68px);
     }
-
     .music-btn {
       position: fixed;
       top: max(18px, env(safe-area-inset-top, 18px));
@@ -167,9 +152,7 @@
       align-items: center;
       transition: transform 0.2s ease;
     }
-
     .music-btn:hover { transform: scale(1.08); }
-
     .music-hint {
       position: fixed;
       bottom: max(22px, env(safe-area-inset-bottom, 22px));
@@ -187,7 +170,6 @@
       white-space: nowrap;
       transition: opacity 0.4s ease;
     }
-
     .bg-heart {
       position: fixed;
       bottom: -40px;
@@ -196,7 +178,6 @@
       pointer-events: none;
       z-index: 2;
     }
-
     @keyframes bgGlitterShimmer {
       0% { background-position: 0 0, 12px 15px, 6px 8px, center; }
       50% { background-position: 13px 13px, 29px 32px, 15px 17px, center; }
@@ -250,7 +231,7 @@
         <span class="sparkle s6">✨</span>
         <div class="name">Ashish</div>
       </div>
-      <br />
+      <br>
       <div class="heart-wrap">
         <svg class="gold-heart-svg" viewBox="0 0 32 29.6" xmlns="http://w3.org">
           <defs>
@@ -264,8 +245,95 @@
           <path fill="url(#gold3DHeart)" d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
         </svg>
       </div>
-      <br />
+      <br>
       <div class="name-box">
         <span class="sparkle s1">✨</span>
         <span class="sparkle s2">✦</span>
         <span class="sparkle s3">✦</span>
+        <span class="sparkle s4">✨</span>
+        <span class="sparkle s5">✦</span>
+        <span class="sparkle s6">✦</span>
+        <div class="name">Madhu</div>
+      </div>
+    </div>
+  </div>
+
+Tap anywhere for music ✨
+var music = document.getElementById('bgMusic');
+var musicBtn = document.getElementById('musicBtn');
+var musicHint = document.getElementById('musicHint');
+var card = document.getElementById('tiltCard');
+var glare = document.getElementById('cardGlare');
+var isPlaying = false;
+function update3DCard(clientX, clientY) {
+card.style.animation = 'cardGlitterShimmer 2.5s linear infinite';
+var rect = card.getBoundingClientRect();
+var x = clientX - rect.left;
+var y = clientY - rect.top;
+var rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -15;
+var rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 15;
+card.style.transform = 'rotateX(' + rotateX.toFixed(2) + 'deg) rotateY(' + rotateY.toFixed(2) + 'deg)';
+glare.style.setProperty('--glare-x', ((x / rect.width) * 100) + '%');
+glare.style.setProperty('--glare-y', ((y / rect.height) * 100) + '%');
+glare.style.setProperty('--glare-opacity', '0.85');
+}
+function reset3DCard() {
+card.style.transform = '';
+card.style.animation = 'auto3DFloat 5s ease-in-out infinite, cardGlitterShimmer 2.5s linear infinite';
+glare.style.setProperty('--glare-opacity', '0.5');
+}
+document.addEventListener('mousemove', function(e) {
+update3DCard(e.clientX, e.clientY);
+});
+document.addEventListener('mouseleave', reset3DCard);
+document.addEventListener('touchmove', function(e) {
+if (e.touches && e.touches.length) {
+update3DCard(e.touches[0].clientX, e.touches[0].clientY);
+}
+}, { passive: true });
+document.addEventListener('touchend', reset3DCard);
+function createHeart() {
+var heart = document.createElement('div');
+heart.classList.add('bg-heart');
+var items = ['💛', '✨', '✦', '💫'];
+heart.innerText = items[Math.floor(Math.random() * items.length)];
+heart.style.left = (Math.random() * 94 + 2) + 'vw';
+var duration = Math.random() * 3 + 4;
+heart.style.animationDuration = duration + 's';
+heart.style.fontSize = (Math.random() * 0.9 + 0.85) + 'rem';
+document.body.appendChild(heart);
+setTimeout(function() { heart.remove(); }, duration * 1000);
+}
+setInterval(createHeart, 500);
+function playMusic() {
+if (!isPlaying) {
+music.play().then(function() {
+isPlaying = true;
+musicBtn.innerText = '🎵';
+if (musicHint) {
+musicHint.style.opacity = '0';
+setTimeout(function() { musicHint.style.display = 'none'; }, 400);
+}
+}).catch(function() {});
+}
+}
+window.addEventListener('load', playMusic);
+document.addEventListener('touchstart', playMusic, { once: true, passive: true });
+document.addEventListener('click', playMusic, { once: true });
+musicBtn.addEventListener('click', function(e) {
+e.stopPropagation();
+if (isPlaying) {
+music.pause();
+isPlaying = false;
+musicBtn.innerText = '🔇';
+} else {
+music.play().then(function() {
+isPlaying = true;
+musicBtn.innerText = '🎵';
+if (musicHint) {
+musicHint.style.opacity = '0';
+setTimeout(function() { musicHint.style.display = 'none'; }, 400);
+}
+}).catch(function() {});
+}
+});
