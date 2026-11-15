@@ -9,42 +9,53 @@
   <link href="https://googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
-    html, body { width: 100%; height: 100%; min-height: 100vh; min-height: 100dvh; overflow: hidden; }
-    body { display: flex; justify-content: center; align-items: center; padding: env(safe-area-inset-top, 16px) env(safe-area-inset-right, 16px) env(safe-area-inset-bottom, 16px) env(safe-area-inset-left, 16px); background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%); position: relative; cursor: pointer; font-family: 'Poppins', sans-serif; perspective: 1000px; }
-    .star { position: absolute; background: #ffffff; border-radius: 50%; opacity: 0.8; animation: twinkle var(--duration) ease-in-out infinite; pointer-events: none; }
-    .shooting-star { position: absolute; top: 15%; left: 80%; width: 120px; height: 2px; background: linear-gradient(90deg, rgba(255, 255, 255, 1), transparent); transform: rotate(-35deg); opacity: 0; animation: shoot 6s linear infinite; pointer-events: none; }
-    .card-wrapper { z-index: 10; width: min(90vw, 420px); display: flex; justify-content: center; align-items: center; }
-    .card { position: relative; overflow: hidden; background: rgba(20, 22, 38, 0.68); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); padding: clamp(32px, 7vh, 65px) clamp(24px, 6vw, 55px); border-radius: clamp(20px, 4vw, 28px); text-align: center; width: 100%; max-height: 85dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 2px solid rgba(255, 105, 180, 0.75); transform-style: preserve-3d; transition: transform 0.15s ease-out; animation: fadeIn 1.2s ease-in-out, neonCardBlink 1.8s ease-in-out infinite alternate; }
-    .glare { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: inherit; background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.35) 0%, rgba(255, 105, 180, 0.18) 35%, transparent 70%); opacity: var(--glare-opacity, 0.4); pointer-events: none; transition: opacity 0.3s ease; mix-blend-mode: screen; }
-    .card::after { content: ""; position: absolute; top: -50%; left: -150%; width: 80%; height: 200%; background: linear-gradient(to right, transparent 0%, rgba(255, 182, 193, 0.18) 50%, transparent 100%); transform: rotate(25deg); animation: shimmerSweep 4s infinite; pointer-events: none; }
+    html, body { width: 100%; height: 100%; min-height: 100vh; min-height: 100dvh; overflow: hidden; background: #060714; }
+    body { display: flex; justify-content: center; align-items: center; padding: env(safe-area-inset-top, 16px) env(safe-area-inset-right, 16px) env(safe-area-inset-bottom, 16px) env(safe-area-inset-left, 16px); position: relative; cursor: pointer; font-family: 'Poppins', sans-serif; perspective: 1000px; }
+    
+    /* Fullscreen Fireworks Canvas */
+    #fireworksCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+
+    /* Center 3D Glass Card */
+    .card-wrapper { z-index: 10; width: min(88vw, 400px); display: flex; justify-content: center; align-items: center; pointer-events: none; }
+    .card { position: relative; overflow: hidden; background: rgba(15, 17, 32, 0.55); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: clamp(30px, 6.5vh, 60px) clamp(24px, 6vw, 50px); border-radius: clamp(20px, 4vw, 28px); text-align: center; width: 100%; max-height: 85dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 2px solid rgba(255, 105, 180, 0.7); transform-style: preserve-3d; transition: transform 0.15s ease-out; animation: fadeIn 1.2s ease-in-out, neonCardBlink 1.8s ease-in-out infinite alternate; }
+    
+    .glare { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: inherit; background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.32) 0%, rgba(255, 105, 180, 0.15) 35%, transparent 70%); opacity: var(--glare-opacity, 0.35); pointer-events: none; mix-blend-mode: screen; }
+
     .name { font-family: 'Dancing Script', cursive; font-size: clamp(2.8rem, 9vw, 4.2rem); line-height: 1.15; color: #ffb3c6; word-break: break-word; transform: translateZ(35px); animation: neonTextBlink 1.8s ease-in-out infinite alternate; }
     .heart { font-size: clamp(2.4rem, 7vw, 3.6rem); margin: clamp(12px, 3vh, 22px) 0; display: inline-block; filter: drop-shadow(0 0 18px rgba(255, 50, 100, 0.95)); animation: heartbeat 1.1s infinite; transform: translateZ(50px); }
+
+    /* Music Button */
     .music-btn { position: fixed; top: max(16px, env(safe-area-inset-top, 16px)); right: max(16px, env(safe-area-inset-right, 16px)); background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); border: 1.5px solid rgba(255, 182, 193, 0.5); border-radius: 50%; width: clamp(42px, 6vw, 50px); height: clamp(42px, 6vw, 50px); font-size: clamp(1.1rem, 3vw, 1.4rem); color: #fff; cursor: pointer; box-shadow: 0 0 18px rgba(255, 105, 180, 0.45); z-index: 20; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease; }
     .music-btn:hover { transform: scale(1.08); }
+
+    /* Tap Hint */
     .tap-hint { position: fixed; bottom: max(20px, env(safe-area-inset-bottom, 20px)); font-size: clamp(0.8rem, 2.5vw, 0.95rem); color: #ffd1dc; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 182, 193, 0.35); padding: 8px 18px; border-radius: 25px; z-index: 15; animation: pulseHint 2s infinite; pointer-events: none; white-space: nowrap; }
-    .bg-heart { position: absolute; bottom: -50px; opacity: 0.9; filter: drop-shadow(0 0 10px rgba(255, 105, 180, 0.75)); animation: floatUp linear forwards; pointer-events: none; will-change: transform, opacity; z-index: 5; }
-    @media (max-height: 480px) and (orientation: landscape) { .card { padding: 18px 36px; } .card-wrapper { width: min(75vw, 380px); } .name { font-size: 2.4rem; } .heart { font-size: 2rem; margin: 6px 0; } }
+
+    @media (max-height: 480px) and (orientation: landscape) {
+      .card { padding: 18px 36px; }
+      .card-wrapper { width: min(75vw, 380px); }
+      .name { font-size: 2.4rem; }
+      .heart { font-size: 2rem; margin: 6px 0; }
+    }
+
     @keyframes neonCardBlink {
-      0% { border-color: rgba(255, 105, 180, 0.35); box-shadow: 0 0 15px rgba(255, 105, 180, 0.18), inset 0 0 10px rgba(255, 105, 180, 0.08); }
-      100% { border-color: rgba(255, 130, 195, 1); box-shadow: 0 0 42px rgba(255, 105, 180, 0.65), 0 0 80px rgba(255, 20, 147, 0.35), inset 0 0 25px rgba(255, 105, 180, 0.25); }
+      0% { border-color: rgba(255, 105, 180, 0.35); box-shadow: 0 0 15px rgba(255, 105, 180, 0.2); }
+      100% { border-color: rgba(255, 130, 195, 1); box-shadow: 0 0 40px rgba(255, 105, 180, 0.65), 0 0 75px rgba(255, 20, 147, 0.35); }
     }
     @keyframes neonTextBlink {
-      0% { color: #ff85a2; text-shadow: 0 0 6px rgba(255, 105, 180, 0.45); }
-      100% { color: #ffd6e0; text-shadow: 0 0 15px rgba(255, 105, 180, 0.95), 0 0 32px rgba(255, 20, 147, 0.85), 0 0 48px rgba(255, 105, 180, 0.6); }
+      0% { color: #ff85a2; text-shadow: 0 0 8px rgba(255, 105, 180, 0.5); }
+      100% { color: #ffd6e0; text-shadow: 0 0 16px rgba(255, 105, 180, 1), 0 0 34px rgba(255, 20, 147, 0.85); }
     }
-    @keyframes shimmerSweep { 0% { left: -150%; } 45% { left: 160%; } 100% { left: 160%; } }
-    @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
-    @keyframes shoot { 0% { transform: translate(0, 0) rotate(-35deg); opacity: 1; } 15% { transform: translate(-500px, 350px) rotate(-35deg); opacity: 0; } 100% { transform: translate(-500px, 350px) rotate(-35deg); opacity: 0; } }
     @keyframes heartbeat { 0%, 100% { transform: translateZ(50px) scale(1); } 25% { transform: translateZ(50px) scale(1.28); } 50% { transform: translateZ(50px) scale(1); } 75% { transform: translateZ(50px) scale(1.18); } }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes pulseHint { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
-    @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0.95; } 100% { transform: translateY(-115vh) rotate(360deg) scale(1.15); opacity: 0; } }
   </style>
 </head>
 <body>
   <audio id="bgMusic" loop playsinline preload="auto"><source src="song.mp3" type="audio/mpeg"></audio>
   <button class="music-btn" id="musicBtn" aria-label="Toggle Music" title="Play/Pause Music">🔇</button>
-  <div class="shooting-star"></div>
+  <canvas id="fireworksCanvas"></canvas>
+
   <div class="card-wrapper">
     <div class="card" id="tiltCard">
       <div class="glare" id="cardGlare"></div>
@@ -53,82 +64,208 @@
       <div class="name">Madhu</div>
     </div>
   </div>
-  <div class="tap-hint" id="tapHint">Tap anywhere for music ✨</div>
+
+  <div class="tap-hint" id="tapHint">Tap sky for fireworks & music 🎆</div>
+
   <script>
+    const canvas = document.getElementById('fireworksCanvas');
+    const ctx = canvas.getContext('2d');
     const music = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
     const tapHint = document.getElementById('tapHint');
     const card = document.getElementById('tiltCard');
     const glare = document.getElementById('cardGlare');
+
+    let width, height;
     let isPlaying = false;
     let lastInteraction = 0;
 
-    for (let i = 0; i < 90; i++) {
-      const star = document.createElement('div');
-      star.classList.add('star');
-      const size = Math.random() * 2.5 + 1;
-      star.style.width = size + 'px';
-      star.style.height = size + 'px';
-      star.style.top = Math.random() * 100 + 'vh';
-      star.style.left = Math.random() * 100 + 'vw';
-      star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
-      star.style.animationDelay = (Math.random() * 3) + 's';
-      document.body.appendChild(star);
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
     }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-    function update3DCard(clientX, clientY) {
-      const rect = card.getBoundingClientRect();
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const rotateX = ((y - centerY) / centerY) * -16;
-      const rotateY = ((x - centerX) / centerX) * 16;
-      card.style.transform = `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
-      const glareX = (x / rect.width) * 100;
-      const glareY = (y / rect.height) * 100;
-      glare.style.setProperty('--glare-x', `${glareX}%`);
-      glare.style.setProperty('--glare-y', `${glareY}%`);
-      glare.style.setProperty('--glare-opacity', '0.85');
-    }
+    // Background Twinkling Stars
+    const stars = Array.from({ length: 110 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      r: Math.random() * 1.6 + 0.4,
+      alpha: Math.random(),
+      speed: Math.random() * 0.02 + 0.005
+    }));
 
-    function reset3DCard() {
-      card.style.transform = 'rotateX(0deg) rotateY(0deg)';
-      glare.style.setProperty('--glare-opacity', '0.3');
-    }
+    const particles = [];
+    const rockets = [];
+    const colors = ['#ff2a6d', '#ff69b4', '#ff9ebb', '#ffd700', '#ff4d6d', '#c77dff', '#ff758f'];
 
-    document.addEventListener('mousemove', (e) => { update3DCard(e.clientX, e.clientY); });
-    document.addEventListener('mouseleave', reset3DCard);
-    document.addEventListener('touchmove', (e) => { if (e.touches.length > 0) { update3DCard(e.touches.clientX, e.touches.clientY); } }, { passive: true });
-    document.addEventListener('touchend', reset3DCard);
+    // Heart Shape Math Formula for Fireworks Burst
+    function createHeartFirework(x, y) {
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const secondaryColor = colors[Math.floor(Math.random() * colors.length)];
+      const count = 75;
+      const scale = Math.min(width, height) * 0.009 + 4.5;
 
-    function startAudio() {
-      if (!isPlaying) {
-        music.play().then(() => {
-          isPlaying = true;
-          musicBtn.innerText = '🎵';
-          if (tapHint) tapHint.style.display = 'none';
-        }).catch(() => {});
+      for (let i = 0; i < count; i++) {
+        const t = (Math.PI * 2 * i) / count;
+        const hx = 16 * Math.pow(Math.sin(t), 3);
+        const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+        
+        const speedSpread = 0.85 + Math.random() * 0.35;
+        particles.push({
+          x: x,
+          y: y,
+          vx: (hx * scale * 0.035) * speedSpread,
+          vy: (hy * scale * 0.035) * speedSpread,
+          alpha: 1,
+          decay: Math.random() * 0.012 + 0.011,
+          color: i % 2 === 0 ? color : secondaryColor,
+          size: Math.random() * 2.5 + 1.8
+        });
       }
     }
 
-    function handleInteraction(e) {
-      if (e.target.closest('#musicBtn')) return;
-      const now = Date.now();
-      if (now - lastInteraction < 250) return;
-      lastInteraction = now;
-      for (let i = 0; i < 18; i++) { createHeart(); }
-      startAudio();
+    // Launch Rocket from Bottom
+    function launchRocket(targetX, targetY) {
+      const startX = targetX !== undefined ? targetX + (Math.random() * 80 - 40) : Math.random() * (width * 0.8) + width * 0.1;
+      const destX = targetX !== undefined ? targetX : startX + (Math.random() * 100 - 50);
+      const destY = targetY !== undefined ? targetY : Math.random() * (height * 0.45) + height * 0.12;
+      
+      rockets.push({
+        x: startX,
+        y: height,
+        tx: destX,
+        ty: destY,
+        vx: (destX - startX) / 35,
+        vy: (destY - height) / 35,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        trail: []
+      });
     }
 
-    document.body.addEventListener('touchstart', (e) => {
-      if (e.touches.length > 0) { update3DCard(e.touches.clientX, e.touches.clientY); }
-      handleInteraction(e);
-    }, { passive: true });
-    document.body.addEventListener('click', handleInteraction);
+    function animate() {
+      ctx.fillStyle = 'rgba(6, 7, 20, 0.22)';
+      ctx.fillRect(0, 0, width, height);
 
-    musicBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
+      // Draw Stars
+      stars.forEach(s => {
+        s.alpha += s.speed;
+        if (s.alpha > 1 || s.alpha < 0.1) s.speed = -s.speed;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0.1, s.alpha)})`;
+        ctx.fill();
+      });
+
+      // Update & Draw Rockets
+      for (let i = rockets.length - 1; i >= 0; i--) {
+        const r = rockets[i];
+        r.trail.push({ x: r.x, y: r.y });
+        if (r.trail.length > 6) r.trail.shift();
+
+        r.x += r.vx;
+        r.y += r.vy;
+
+        ctx.beginPath();
+        r.trail.forEach((pt, idx) => {
+          if (idx === 0) ctx.moveTo(pt.x, pt.y);
+          else ctx.lineTo(pt.x, pt.y);
+        });
+        ctx.strokeStyle = r.color;
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        if (r.y <= r.ty) {
+          createHeartFirework(r.x, r.y);
+          rockets.splice(i, 1);
+        }
+      }
+
+      // Update & Draw Heart Firework Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.035; // Gentle gravity
+        p.vx *= 0.985;
+        p.vy *= 0.985;
+        p.alpha -= p.decay;
+
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = p.color;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+ctx.restore();
+}
+requestAnimationFrame(animate);
+}
+animate();
+// Auto Launch Fireworks Every 1.4 Seconds
+setInterval(() => {
+launchRocket();
+}, 1400);
+// Initial Welcome Fireworks
+setTimeout(() => launchRocket(width * 0.25, height * 0.25), 300);
+setTimeout(() => launchRocket(width * 0.75, height * 0.25), 700);
+// 3D Tilt & Glare Effect
+function update3DCard(clientX, clientY) {
+const rect = card.getBoundingClientRect();
+const x = clientX - rect.left;
+const y = clientY - rect.top;
+const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -15;
+const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 15;
+card.style.transform = rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg);
+glare.style.setProperty('--glare-x', ${(x / rect.width) * 100}%);
+glare.style.setProperty('--glare-y', ${(y / rect.height) * 100}%);
+glare.style.setProperty('--glare-opacity', '0.85');
+}
+function reset3DCard() {
+card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+glare.style.setProperty('--glare-opacity', '0.3');
+}
+document.addEventListener('mousemove', e => update3DCard(e.clientX, e.clientY));
+document.addEventListener('mouseleave', reset3DCard);
+document.addEventListener('touchmove', e => { if (e.touches.length > 0) update3DCard(e.touches.clientX, e.touches.clientY); }, { passive: true });
+document.addEventListener('touchend', reset3DCard);
+// Audio & Tap Firework Burst
+function startAudio() {
+if (!isPlaying) {
+music.play().then(() => {
+isPlaying = true;
+musicBtn.innerText = '🎵';
+if (tapHint) tapHint.style.display = 'none';
+}).catch(() => {});
+}
+}
+function handleTap(clientX, clientY, target) {
+if (target.closest('#musicBtn')) return;
+const now = Date.now();
+if (now - lastInteraction < 200) return;
+lastInteraction = now;
+createHeartFirework(clientX, clientY);
+startAudio();
+}
+document.body.addEventListener('touchstart', e => {
+if (e.touches.length > 0) {
+update3DCard(e.touches.clientX, e.touches.clientY);
+handleTap(e.touches.clientX, e.touches.clientY, e.target);
+}
+}, { passive: true });
+document.body.addEventListener('click', e => {
+handleTap(e.clientX, e.clientY, e.target);
+});
+musicBtn.addEventListener('click', e => {
+e.stopPropagation();
 if (isPlaying) {
 music.pause();
 isPlaying = false;
@@ -141,21 +278,3 @@ if (tapHint) tapHint.style.display = 'none';
 }).catch(() => {});
 }
 });
-function createHeart() {
-const heart = document.createElement('div');
-heart.classList.add('bg-heart');
-const emojis = ['❤️', '💖', '💕', '💗', '💓', '✨'];
-heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-heart.style.left = (Math.random() * 96 + 1) + 'vw';
-const duration = Math.random() * 2.5 + 3.5;
-heart.style.animationDuration = duration + 's';
-heart.style.fontSize = (Math.random() * 1.3 + 0.9) + 'rem';
-document.body.appendChild(heart);
-setTimeout(() => { heart.remove(); }, duration * 1000);
-}
-// Initial heart shower on page load
-for (let i = 0; i < 20; i++) {
-setTimeout(createHeart, i * 150);
-}
-// Continuous shower of hearts across the whole screen
-setInterval(createHeart, 250);
