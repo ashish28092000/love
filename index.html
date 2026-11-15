@@ -33,6 +33,7 @@
       position: relative;
       cursor: pointer;
       font-family: 'Poppins', sans-serif;
+      perspective: 1000px; /* Enables 3D depth */
     }
 
     /* Twinkling Stars */
@@ -59,27 +60,78 @@
       pointer-events: none;
     }
 
-    /* Dark Frosted Glass Card */
+    /* 3D Perspective Wrapper */
+    .card-wrapper {
+      z-index: 10;
+      width: min(90vw, 420px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Dark Frosted Glass Card with 3D Transform */
     .card {
+      position: relative;
+      overflow: hidden;
       background: rgba(20, 22, 38, 0.65);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       padding: clamp(32px, 7vh, 65px) clamp(24px, 6vw, 55px);
       border-radius: clamp(20px, 4vw, 28px);
-      box-shadow: 0 0 40px rgba(255, 105, 180, 0.25), inset 0 0 20px rgba(255, 255, 255, 0.05);
+      box-shadow: 0 15px 45px rgba(255, 105, 180, 0.25), inset 0 0 20px rgba(255, 255, 255, 0.05);
       text-align: center;
-      width: min(90vw, 420px);
+      width: 100%;
       max-height: 85dvh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 10;
-      border: 1.5px solid rgba(255, 182, 193, 0.35);
+      border: 1.5px solid rgba(255, 182, 193, 0.4);
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease-out, box-shadow 0.2s ease;
       animation: fadeIn 1.2s ease-in-out;
     }
 
-    /* Glowing Neon Rose-Gold Names */
+    /* Moving 3D Light Glare Overlay */
+    .glare {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: radial-gradient(
+        circle at var(--glare-x, 50%) var(--glare-y, 50%),
+        rgba(255, 255, 255, 0.32) 0%,
+        rgba(255, 182, 193, 0.12) 35%,
+        transparent 70%
+      );
+      opacity: var(--glare-opacity, 0.35);
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      mix-blend-mode: screen;
+    }
+
+    /* Subtle Ambient Shimmer Sweep */
+    .card::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -150%;
+      width: 80%;
+      height: 200%;
+      background: linear-gradient(
+        to right,
+        transparent 0%,
+        rgba(255, 255, 255, 0.12) 50%,
+        transparent 100%
+      );
+      transform: rotate(25deg);
+      animation: shimmerSweep 5s infinite;
+      pointer-events: none;
+    }
+
+    /* Glowing Neon Rose-Gold Names Popping in 3D */
     .name {
       font-family: 'Dancing Script', cursive;
       font-size: clamp(2.8rem, 9vw, 4.2rem);
@@ -87,15 +139,17 @@
       color: #ff9ebb;
       text-shadow: 0 0 12px rgba(255, 105, 180, 0.8), 0 0 25px rgba(255, 20, 147, 0.5);
       word-break: break-word;
+      transform: translateZ(35px); /* Elevates text in 3D space */
     }
 
-    /* Glowing Beating Heart */
+    /* Glowing Beating Heart Popping in 3D */
     .heart {
       font-size: clamp(2.4rem, 7vw, 3.6rem);
       margin: clamp(12px, 3vh, 22px) 0;
       display: inline-block;
       filter: drop-shadow(0 0 15px rgba(255, 50, 100, 0.85));
       animation: heartbeat 1.2s infinite;
+      transform: translateZ(50px); /* Pops heart further forward */
     }
 
     /* Music Toggle Button */
@@ -154,10 +208,18 @@
     @media (max-height: 480px) and (orientation: landscape) {
       .card {
         padding: 18px 36px;
+      }
+      .card-wrapper {
         width: min(75vw, 380px);
       }
       .name { font-size: 2.4rem; }
       .heart { font-size: 2rem; margin: 6px 0; }
+    }
+
+    @keyframes shimmerSweep {
+      0% { left: -150%; }
+      45% { left: 160%; }
+      100% { left: 160%; }
     }
 
     @keyframes twinkle {
@@ -172,10 +234,10 @@
     }
 
     @keyframes heartbeat {
-      0%, 100% { transform: scale(1); }
-      25% { transform: scale(1.25); }
-      50% { transform: scale(1); }
-      75% { transform: scale(1.15); }
+      0%, 100% { transform: translateZ(50px) scale(1); }
+      25% { transform: translateZ(50px) scale(1.25); }
+      50% { transform: translateZ(50px) scale(1); }
+      75% { transform: translateZ(50px) scale(1.15); }
     }
 
     @keyframes fadeIn {
@@ -205,23 +267,28 @@
   <!-- Shooting Star -->
   <div class="shooting-star"></div>
 
-  <!-- Main Dark Glass Card -->
-  <div class="card">
-    <div class="name">Ashish</div>
-    <div class="heart">❤️</div>
-    <div class="name">Madhu</div>
+  <!-- 3D Interactive Card -->
+  <div class="card-wrapper">
+    <div class="card" id="tiltCard">
+      <div class="glare" id="cardGlare"></div>
+      <div class="name">Ashish</div>
+      <div class="heart">❤️</div>
+      <div class="name">Madhu</div>
+    </div>
   </div>
 
-  <div class="tap-hint" id="tapHint">Tap anywhere for music ✨</div>
+  <div class="tap-hint" id="tapHint">Tap or move across card ✨</div>
 
   <script>
     const music = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
     const tapHint = document.getElementById('tapHint');
+    const card = document.getElementById('tiltCard');
+    const glare = document.getElementById('cardGlare');
     let isPlaying = false;
     let lastInteraction = 0;
 
-    // Generate 90 Twinkling Stars in the Night Sky
+    // Generate 90 Twinkling Stars
     for (let i = 0; i < 90; i++) {
       const star = document.createElement('div');
       star.classList.add('star');
@@ -235,63 +302,98 @@
       document.body.appendChild(star);
     }
 
-    function startAudio() {
-      if (!isPlaying) {
-        music.play().then(() => {
-          isPlaying = true;
-          musicBtn.innerText = '🎵';
-          if (tapHint) tapHint.style.display = 'none';
-        }).catch(() => {});
-      }
-    }
+    // 3D Tilt & Glare Calculation (Works for both Mouse & Touch)
+    function update3DCard(clientX, clientY) {
+      const rect = card.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
 
-    function handleInteraction(e) {
-      if (e.target.closest('#musicBtn')) return;
-      const now = Date.now();
-      if (now - lastInteraction < 250) return;
-      lastInteraction = now;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
 
-      for (let i = 0; i < 12; i++) {
-        createHeart();
-      }
-      startAudio();
-    }
+      // Max tilt angle: 16 degrees
+      const rotateX = ((y - centerY) / centerY) * -16;
+      const rotateY = ((x - centerX) / centerX) * 16;
 
-    document.body.addEventListener('touchstart', handleInteraction, { passive: true });
-    document.body.addEventListener('click', handleInteraction);
+      card.style.transform = `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
+      card.style.boxShadow = `${-rotateY * 1.5}px ${rotateX * 1.5}px 45px rgba(255, 105, 180, 0.38), inset 0 0 22px rgba(255, 255, 255, 0.12)`;
 
-    musicBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      if (isPlaying) {
-        music.pause();
-        isPlaying = false;
-        musicBtn.innerText = '🔇';
-      } else {
-        music.play().then(() => {
-          isPlaying = true;
-          musicBtn.innerText = '🎵';
-          if (tapHint) tapHint.style.display = 'none';
-        }).catch(() => {});
-      }
-    });
-
-    function createHeart() {
-      const heart = document.createElement('div');
-      heart.classList.add('bg-heart');
-      const emojis = ['❤️', '💖', '✨', '💕', '💫'];
-      heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-      heart.style.left = (Math.random() * 94 + 2) + 'vw';
-      heart.style.animationDuration = (Math.random() * 3 + 3.5) + 's';
-      heart.style.fontSize = (Math.random() * 1.2 + 1) + 'rem';
-      document.body.appendChild(heart);
-
-      setTimeout(() => {
-        heart.remove();
-      }, 6500);
-    }
-
-    setInterval(createHeart, 750);
-  </script>
-
-</body>
-</html>
+      // Position radial glare spotlight
+      const glareX = (x / rect.width) * 100;
+      const glareY = (y / rect.height) * 100;
+      glare.style.setProperty('--glare-x', `${glareX}%`);
+      glare.style.setProperty('--glare-y', `${glareY}%`);
+glare.style.setProperty('--glare-opacity', '0.85');
+}
+function reset3DCard() {
+card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+card.style.boxShadow = '0 15px 45px rgba(255, 105, 180, 0.25), inset 0 0 20px rgba(255, 255, 255, 0.05)';
+glare.style.setProperty('--glare-opacity', '0.25');
+}
+// Desktop Mouse Movement
+document.addEventListener('mousemove', (e) => {
+update3DCard(e.clientX, e.clientY);
+});
+document.addEventListener('mouseleave', reset3DCard);
+// Mobile Touch Drag Movement
+document.addEventListener('touchmove', (e) => {
+if (e.touches.length > 0) {
+update3DCard(e.touches[0].clientX, e.touches[0].clientY);
+}
+}, { passive: true });
+document.addEventListener('touchend', reset3DCard);
+// Audio & Heart Burst Logic
+function startAudio() {
+if (!isPlaying) {
+music.play().then(() => {
+isPlaying = true;
+musicBtn.innerText = '🎵';
+if (tapHint) tapHint.style.display = 'none';
+}).catch(() => {});
+}
+}
+function handleInteraction(e) {
+if (e.target.closest('#musicBtn')) return;
+const now = Date.now();
+if (now - lastInteraction < 250) return;
+lastInteraction = now;
+for (let i = 0; i < 12; i++) {
+createHeart();
+}
+startAudio();
+}
+document.body.addEventListener('touchstart', (e) => {
+if (e.touches.length > 0) {
+update3DCard(e.touches[0].clientX, e.touches[0].clientY);
+}
+handleInteraction(e);
+}, { passive: true });
+document.body.addEventListener('click', handleInteraction);
+musicBtn.addEventListener('click', function(e) {
+e.stopPropagation();
+if (isPlaying) {
+music.pause();
+isPlaying = false;
+musicBtn.innerText = '🔇';
+} else {
+music.play().then(() => {
+isPlaying = true;
+musicBtn.innerText = '🎵';
+if (tapHint) tapHint.style.display = 'none';
+}).catch(() => {});
+}
+});
+function createHeart() {
+const heart = document.createElement('div');
+heart.classList.add('bg-heart');
+const emojis = ['❤️', '💖', '✨', '💕', '💫'];
+heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+heart.style.left = (Math.random() * 94 + 2) + 'vw';
+heart.style.animationDuration = (Math.random() * 3 + 3.5) + 's';
+heart.style.fontSize = (Math.random() * 1.2 + 1) + 'rem';
+document.body.appendChild(heart);
+setTimeout(() => {
+heart.remove();
+}, 6500);
+}
+setInterval(createHeart, 750);
