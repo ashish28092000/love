@@ -19,20 +19,20 @@
       justify-content: center;
       align-items: center;
       background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
-      font-family: 'Poppins', sans-serif;
       overflow: hidden;
       position: relative;
+      cursor: pointer;
     }
 
     /* Main Glass Card */
     .card {
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(10px);
-      padding: 50px 40px;
+      padding: 60px 50px;
       border-radius: 25px;
       box-shadow: 0 15px 35px rgba(214, 51, 108, 0.2);
       text-align: center;
-      max-width: 420px;
+      max-width: 400px;
       width: 90%;
       z-index: 10;
       border: 2px solid rgba(255, 255, 255, 0.9);
@@ -41,54 +41,17 @@
 
     .name {
       font-family: 'Dancing Script', cursive;
-      font-size: 3.5rem;
+      font-size: 3.8rem;
       color: #d6336c;
       text-shadow: 2px 2px 4px rgba(214, 51, 108, 0.15);
     }
 
     /* Beating Heart Animation */
     .heart {
-      font-size: 3rem;
-      margin: 15px 0;
+      font-size: 3.2rem;
+      margin: 20px 0;
       display: inline-block;
       animation: heartbeat 1.2s infinite;
-    }
-
-    .subtitle {
-      margin-top: 15px;
-      color: #666;
-      font-size: 0.95rem;
-    }
-
-    /* Interactive Button */
-    .btn {
-      margin-top: 25px;
-      padding: 12px 28px;
-      font-size: 1rem;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 500;
-      color: white;
-      background: linear-gradient(45deg, #ff4b72, #ff758c);
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(255, 75, 114, 0.4);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(255, 75, 114, 0.6);
-    }
-
-    /* Hidden Love Note */
-    .love-note {
-      margin-top: 20px;
-      font-size: 1rem;
-      color: #b5174d;
-      font-weight: 500;
-      display: none;
-      animation: fadeIn 0.8s ease;
     }
 
     /* Floating Background Hearts */
@@ -119,30 +82,15 @@
     }
   </style>
 </head>
-<body>
+<body onclick="burstHearts()">
 
   <div class="card">
     <div class="name">Ashish</div>
     <div class="heart">❤️</div>
     <div class="name">Madhu</div>
-    
-    <p class="subtitle">Together is my favorite place to be ✨</p>
-    
-    <button class="btn" onclick="showMessage()">Tap for a Surprise 💌</button>
-    <p class="love-note" id="note">Every moment with you is special. Forever & always! 💕</p>
   </div>
 
   <script>
-    function showMessage() {
-      const note = document.getElementById('note');
-      note.style.display = 'block';
-      
-      // Burst extra floating hearts on click
-      for (let i = 0; i < 15; i++) {
-        createHeart();
-      }
-    }
-
     function createHeart() {
       const heart = document.createElement('div');
       heart.classList.add('bg-heart');
@@ -156,6 +104,13 @@
       setTimeout(() => {
         heart.remove();
       }, 6000);
+    }
+
+    // Burst extra hearts when clicking anywhere on the screen
+    function burstHearts() {
+      for (let i = 0; i < 10; i++) {
+        createHeart();
+      }
     }
 
     // Continuously generate gentle floating hearts
