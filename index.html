@@ -21,7 +21,7 @@
   @keyframes beat{0%,100%{transform:translateZ(55px) scale(1)}50%{transform:translateZ(55px) scale(1.18)}}
 </style>
 </head>
-<body onclick="var m=document.getElementById('m');if(m.paused){m.play();document.getElementById('b').innerText='🎵';document.getElementById('h').style.display='none'}">
+<body onload="var c=document.getElementById('c'),x=c.getContext('2d'),p=[],cols=['#ffd700','#ffea75','#fffbe0','#d4af37','#b8860b','#f5c842'];function rs(){c.width=innerWidth;c.height=innerHeight}rs();window.addEventListener('resize',rs);function boom(bx,by){for(var i=0;i<65;i++){var a=Math.random()*6.28,s=Math.random()*5.5+1.5;p.push({x:bx,y:by,vx:Math.cos(a)*s,vy:Math.sin(a)*s,c:cols[Math.random()*cols.length|0],l:1,r:Math.random()*2.8+1.2,tw:Math.random()*10})}}setInterval(function(){var bx=Math.random()*c.width,by=Math.random()*(c.height*.75)+40;if(Math.abs(bx-c.width/2)<155&&Math.abs(by-c.height/2)<155)bx=bx<c.width/2?bx-165:bx+165;boom(bx,by)},600);document.addEventListener('pointerdown',function(e){boom(e.clientX,e.clientY);var m=document.getElementById('m');if(m.paused){m.play();document.getElementById('b').innerText='🎵';document.getElementById('h').style.display='none'}});(function loop(){x.clearRect(0,0,c.width,c.height);for(var i=p.length-1;i>=0;i--){var o=p[i];o.x+=o.vx;o.y+=o.vy;o.vy+=.07;o.vx*=.97;o.l-=.016;o.tw+=.4;if(o.l<=0){p.splice(i,1);continue}x.globalAlpha=o.l*(.5+.5*Math.abs(Math.sin(o.tw)));x.shadowBlur=10;x.shadowColor='#ffd700';x.fillStyle=o.c;x.beginPath();x.arc(o.x,o.y,o.r,0,6.28);x.fill()}x.shadowBlur=0;requestAnimationFrame(loop)})()">
   <audio id="m" autoplay loop playsinline><source src="song.mp3" type="audio/mpeg"></audio>
   <button id="b" class="btn" onclick="event.stopPropagation();var m=document.getElementById('m');if(m.paused){m.play();this.innerText='🎵';document.getElementById('h').style.display='none'}else{m.pause();this.innerText='🔇'}">🔇</button>
   <canvas id="c"></canvas>
@@ -31,13 +31,5 @@
     <div class="name">Madhu</div>
   </div>
   <div id="h" class="hint">Tap anywhere for music ✨</div>
-  <script>
-    var c=document.getElementById('c'),x=c.getContext('2d'),p=[],cols=['#ff1e56','#ffac41','#00d2ff','#a8ff35','#d633ff','#ffd700','#ff4d6d'];
-    function rs(){c.width=innerWidth;c.height=innerHeight}rs();onresize=rs;
-    function boom(bx,by){for(var i=0;i<55;i++){var a=Math.random()*6.28,s=Math.random()*5+2;p.push({x:bx,y:by,vx:Math.cos(a)*s,vy:Math.sin(a)*s,c:cols[Math.random()*cols.length|0],l:1,r:Math.random()*3.5+2})}}
-    setInterval(function(){var bx=Math.random()*c.width,by=Math.random()*(c.height*.75)+40;if(Math.abs(bx-c.width/2)<150&&Math.abs(by-c.height/2)<150)bx=bx<c.width/2?bx-160:bx+160;boom(bx,by)},650);
-    document.addEventListener('pointerdown',function(e){boom(e.clientX,e.clientY)});
-    (function loop(){x.clearRect(0,0,c.width,c.height);for(var i=p.length-1;i>=0;i--){var o=p[i];o.x+=o.vx;o.y+=o.vy;o.vy+=.08;o.vx*=.97;o.l-=.018;if(o.l<=0){p.splice(i,1);continue}x.globalAlpha=o.l;x.fillStyle=o.c;x.beginPath();x.arc(o.x,o.y,o.r,0,6.28);x.fill()}requestAnimationFrame(loop)})();
-  </script>
 </body>
 </html>
