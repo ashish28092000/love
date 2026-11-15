@@ -8,266 +8,43 @@
   <link rel="preconnect" href="https://gstatic.com" crossorigin>
   <link href="https://googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+    html, body { width: 100%; height: 100%; min-height: 100vh; min-height: 100dvh; overflow: hidden; }
+    body { display: flex; justify-content: center; align-items: center; padding: env(safe-area-inset-top, 16px) env(safe-area-inset-right, 16px) env(safe-area-inset-bottom, 16px) env(safe-area-inset-left, 16px); background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%); position: relative; cursor: pointer; font-family: 'Poppins', sans-serif; perspective: 1000px; }
+    .star { position: absolute; background: #ffffff; border-radius: 50%; opacity: 0.8; animation: twinkle var(--duration) ease-in-out infinite; pointer-events: none; }
+    .shooting-star { position: absolute; top: 15%; left: 80%; width: 120px; height: 2px; background: linear-gradient(90deg, rgba(255, 255, 255, 1), transparent); transform: rotate(-35deg); opacity: 0; animation: shoot 6s linear infinite; pointer-events: none; }
+    .card-wrapper { z-index: 10; width: min(90vw, 420px); display: flex; justify-content: center; align-items: center; }
+    .card { position: relative; overflow: hidden; background: rgba(20, 22, 38, 0.68); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); padding: clamp(32px, 7vh, 65px) clamp(24px, 6vw, 55px); border-radius: clamp(20px, 4vw, 28px); text-align: center; width: 100%; max-height: 85dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 2px solid rgba(255, 105, 180, 0.75); transform-style: preserve-3d; transition: transform 0.15s ease-out; animation: fadeIn 1.2s ease-in-out, neonCardBlink 1.8s ease-in-out infinite alternate; }
+    .glare { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: inherit; background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.35) 0%, rgba(255, 105, 180, 0.18) 35%, transparent 70%); opacity: var(--glare-opacity, 0.4); pointer-events: none; transition: opacity 0.3s ease; mix-blend-mode: screen; }
+    .card::after { content: ""; position: absolute; top: -50%; left: -150%; width: 80%; height: 200%; background: linear-gradient(to right, transparent 0%, rgba(255, 182, 193, 0.18) 50%, transparent 100%); transform: rotate(25deg); animation: shimmerSweep 4s infinite; pointer-events: none; }
+    .name { font-family: 'Dancing Script', cursive; font-size: clamp(2.8rem, 9vw, 4.2rem); line-height: 1.15; color: #ffb3c6; word-break: break-word; transform: translateZ(35px); animation: neonTextBlink 1.8s ease-in-out infinite alternate; }
+    .heart { font-size: clamp(2.4rem, 7vw, 3.6rem); margin: clamp(12px, 3vh, 22px) 0; display: inline-block; filter: drop-shadow(0 0 18px rgba(255, 50, 100, 0.95)); animation: heartbeat 1.1s infinite; transform: translateZ(50px); }
+    .music-btn { position: fixed; top: max(16px, env(safe-area-inset-top, 16px)); right: max(16px, env(safe-area-inset-right, 16px)); background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); border: 1.5px solid rgba(255, 182, 193, 0.5); border-radius: 50%; width: clamp(42px, 6vw, 50px); height: clamp(42px, 6vw, 50px); font-size: clamp(1.1rem, 3vw, 1.4rem); color: #fff; cursor: pointer; box-shadow: 0 0 18px rgba(255, 105, 180, 0.45); z-index: 20; display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease; }
+    .music-btn:hover { transform: scale(1.08); }
+    .tap-hint { position: fixed; bottom: max(20px, env(safe-area-inset-bottom, 20px)); font-size: clamp(0.8rem, 2.5vw, 0.95rem); color: #ffd1dc; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 182, 193, 0.35); padding: 8px 18px; border-radius: 25px; z-index: 15; animation: pulseHint 2s infinite; pointer-events: none; white-space: nowrap; }
+    .bg-heart { position: absolute; bottom: -50px; opacity: 0.9; filter: drop-shadow(0 0 10px rgba(255, 105, 180, 0.75)); animation: floatUp linear forwards; pointer-events: none; will-change: transform, opacity; z-index: 5; }
+    @media (max-height: 480px) and (orientation: landscape) { .card { padding: 18px 36px; } .card-wrapper { width: min(75vw, 380px); } .name { font-size: 2.4rem; } .heart { font-size: 2rem; margin: 6px 0; } }
+    @keyframes neonCardBlink {
+      0% { border-color: rgba(255, 105, 180, 0.35); box-shadow: 0 0 15px rgba(255, 105, 180, 0.18), inset 0 0 10px rgba(255, 105, 180, 0.08); }
+      100% { border-color: rgba(255, 130, 195, 1); box-shadow: 0 0 42px rgba(255, 105, 180, 0.65), 0 0 80px rgba(255, 20, 147, 0.35), inset 0 0 25px rgba(255, 105, 180, 0.25); }
     }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      min-height: 100vh;
-      min-height: 100dvh;
-      overflow: hidden;
+    @keyframes neonTextBlink {
+      0% { color: #ff85a2; text-shadow: 0 0 6px rgba(255, 105, 180, 0.45); }
+      100% { color: #ffd6e0; text-shadow: 0 0 15px rgba(255, 105, 180, 0.95), 0 0 32px rgba(255, 20, 147, 0.85), 0 0 48px rgba(255, 105, 180, 0.6); }
     }
-
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: env(safe-area-inset-top, 16px) env(safe-area-inset-right, 16px) env(safe-area-inset-bottom, 16px) env(safe-area-inset-left, 16px);
-      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-      position: relative;
-      cursor: pointer;
-      font-family: 'Poppins', sans-serif;
-      perspective: 1000px; /* Enables 3D depth */
-    }
-
-    /* Twinkling Stars */
-    .star {
-      position: absolute;
-      background: #ffffff;
-      border-radius: 50%;
-      opacity: 0.8;
-      animation: twinkle var(--duration) ease-in-out infinite;
-      pointer-events: none;
-    }
-
-    /* Shooting Star */
-    .shooting-star {
-      position: absolute;
-      top: 15%;
-      left: 80%;
-      width: 120px;
-      height: 2px;
-      background: linear-gradient(90deg, rgba(255, 255, 255, 1), transparent);
-      transform: rotate(-35deg);
-      opacity: 0;
-      animation: shoot 6s linear infinite;
-      pointer-events: none;
-    }
-
-    /* 3D Perspective Wrapper */
-    .card-wrapper {
-      z-index: 10;
-      width: min(90vw, 420px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* Dark Frosted Glass Card with 3D Transform */
-    .card {
-      position: relative;
-      overflow: hidden;
-      background: rgba(20, 22, 38, 0.65);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      padding: clamp(32px, 7vh, 65px) clamp(24px, 6vw, 55px);
-      border-radius: clamp(20px, 4vw, 28px);
-      box-shadow: 0 15px 45px rgba(255, 105, 180, 0.25), inset 0 0 20px rgba(255, 255, 255, 0.05);
-      text-align: center;
-      width: 100%;
-      max-height: 85dvh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      border: 1.5px solid rgba(255, 182, 193, 0.4);
-      transform-style: preserve-3d;
-      transition: transform 0.15s ease-out, box-shadow 0.2s ease;
-      animation: fadeIn 1.2s ease-in-out;
-    }
-
-    /* Moving 3D Light Glare Overlay */
-    .glare {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: inherit;
-      background: radial-gradient(
-        circle at var(--glare-x, 50%) var(--glare-y, 50%),
-        rgba(255, 255, 255, 0.32) 0%,
-        rgba(255, 182, 193, 0.12) 35%,
-        transparent 70%
-      );
-      opacity: var(--glare-opacity, 0.35);
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-      mix-blend-mode: screen;
-    }
-
-    /* Subtle Ambient Shimmer Sweep */
-    .card::after {
-      content: "";
-      position: absolute;
-      top: -50%;
-      left: -150%;
-      width: 80%;
-      height: 200%;
-      background: linear-gradient(
-        to right,
-        transparent 0%,
-        rgba(255, 255, 255, 0.12) 50%,
-        transparent 100%
-      );
-      transform: rotate(25deg);
-      animation: shimmerSweep 5s infinite;
-      pointer-events: none;
-    }
-
-    /* Glowing Neon Rose-Gold Names Popping in 3D */
-    .name {
-      font-family: 'Dancing Script', cursive;
-      font-size: clamp(2.8rem, 9vw, 4.2rem);
-      line-height: 1.15;
-      color: #ff9ebb;
-      text-shadow: 0 0 12px rgba(255, 105, 180, 0.8), 0 0 25px rgba(255, 20, 147, 0.5);
-      word-break: break-word;
-      transform: translateZ(35px); /* Elevates text in 3D space */
-    }
-
-    /* Glowing Beating Heart Popping in 3D */
-    .heart {
-      font-size: clamp(2.4rem, 7vw, 3.6rem);
-      margin: clamp(12px, 3vh, 22px) 0;
-      display: inline-block;
-      filter: drop-shadow(0 0 15px rgba(255, 50, 100, 0.85));
-      animation: heartbeat 1.2s infinite;
-      transform: translateZ(50px); /* Pops heart further forward */
-    }
-
-    /* Music Toggle Button */
-    .music-btn {
-      position: fixed;
-      top: max(16px, env(safe-area-inset-top, 16px));
-      right: max(16px, env(safe-area-inset-right, 16px));
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(8px);
-      border: 1.5px solid rgba(255, 182, 193, 0.4);
-      border-radius: 50%;
-      width: clamp(42px, 6vw, 50px);
-      height: clamp(42px, 6vw, 50px);
-      font-size: clamp(1.1rem, 3vw, 1.4rem);
-      color: #fff;
-      cursor: pointer;
-      box-shadow: 0 0 15px rgba(255, 105, 180, 0.3);
-      z-index: 20;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: transform 0.2s ease;
-    }
-
-    .music-btn:hover {
-      transform: scale(1.08);
-    }
-
-    /* Tap Hint */
-    .tap-hint {
-      position: fixed;
-      bottom: max(20px, env(safe-area-inset-bottom, 20px));
-      font-size: clamp(0.8rem, 2.5vw, 0.95rem);
-      color: #ffd1dc;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 182, 193, 0.3);
-      padding: 8px 18px;
-      border-radius: 25px;
-      z-index: 15;
-      animation: pulseHint 2s infinite;
-      pointer-events: none;
-      white-space: nowrap;
-    }
-
-    /* Floating Hearts on Tap */
-    .bg-heart {
-      position: absolute;
-      bottom: -50px;
-      opacity: 0.85;
-      filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.6));
-      animation: floatUp 6s linear infinite;
-      pointer-events: none;
-      will-change: transform, opacity;
-    }
-
-    @media (max-height: 480px) and (orientation: landscape) {
-      .card {
-        padding: 18px 36px;
-      }
-      .card-wrapper {
-        width: min(75vw, 380px);
-      }
-      .name { font-size: 2.4rem; }
-      .heart { font-size: 2rem; margin: 6px 0; }
-    }
-
-    @keyframes shimmerSweep {
-      0% { left: -150%; }
-      45% { left: 160%; }
-      100% { left: 160%; }
-    }
-
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.2; transform: scale(0.8); }
-      50% { opacity: 1; transform: scale(1.2); }
-    }
-
-    @keyframes shoot {
-      0% { transform: translate(0, 0) rotate(-35deg); opacity: 1; }
-      15% { transform: translate(-500px, 350px) rotate(-35deg); opacity: 0; }
-      100% { transform: translate(-500px, 350px) rotate(-35deg); opacity: 0; }
-    }
-
-    @keyframes heartbeat {
-      0%, 100% { transform: translateZ(50px) scale(1); }
-      25% { transform: translateZ(50px) scale(1.25); }
-      50% { transform: translateZ(50px) scale(1); }
-      75% { transform: translateZ(50px) scale(1.15); }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes pulseHint {
-      0%, 100% { opacity: 0.6; }
-      50% { opacity: 1; }
-    }
-
-    @keyframes floatUp {
-      0% { transform: translateY(0) rotate(0deg); opacity: 0.9; }
-      100% { transform: translateY(-115vh) rotate(360deg); opacity: 0; }
-    }
+    @keyframes shimmerSweep { 0% { left: -150%; } 45% { left: 160%; } 100% { left: 160%; } }
+    @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
+    @keyframes shoot { 0% { transform: translate(0, 0) rotate(-35deg); opacity: 1; } 15% { transform: translate(-500px, 350px) rotate(-35deg); opacity: 0; } 100% { transform: translate(-500px, 350px) rotate(-35deg); opacity: 0; } }
+    @keyframes heartbeat { 0%, 100% { transform: translateZ(50px) scale(1); } 25% { transform: translateZ(50px) scale(1.28); } 50% { transform: translateZ(50px) scale(1); } 75% { transform: translateZ(50px) scale(1.18); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulseHint { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+    @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0.95; } 100% { transform: translateY(-115vh) rotate(360deg) scale(1.15); opacity: 0; } }
   </style>
 </head>
 <body>
-
-  <audio id="bgMusic" loop playsinline preload="auto">
-    <source src="song.mp3" type="audio/mpeg">
-  </audio>
-
+  <audio id="bgMusic" loop playsinline preload="auto"><source src="song.mp3" type="audio/mpeg"></audio>
   <button class="music-btn" id="musicBtn" aria-label="Toggle Music" title="Play/Pause Music">🔇</button>
-
-  <!-- Shooting Star -->
   <div class="shooting-star"></div>
-
-  <!-- 3D Interactive Card -->
   <div class="card-wrapper">
     <div class="card" id="tiltCard">
       <div class="glare" id="cardGlare"></div>
@@ -276,9 +53,7 @@
       <div class="name">Madhu</div>
     </div>
   </div>
-
-  <div class="tap-hint" id="tapHint">Tap or move across card ✨</div>
-
+  <div class="tap-hint" id="tapHint">Tap anywhere for music ✨</div>
   <script>
     const music = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
@@ -288,7 +63,6 @@
     let isPlaying = false;
     let lastInteraction = 0;
 
-    // Generate 90 Twinkling Stars
     for (let i = 0; i < 90; i++) {
       const star = document.createElement('div');
       star.classList.add('star');
@@ -302,75 +76,59 @@
       document.body.appendChild(star);
     }
 
-    // 3D Tilt & Glare Calculation (Works for both Mouse & Touch)
     function update3DCard(clientX, clientY) {
       const rect = card.getBoundingClientRect();
       const x = clientX - rect.left;
       const y = clientY - rect.top;
-
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
-
-      // Max tilt angle: 16 degrees
       const rotateX = ((y - centerY) / centerY) * -16;
       const rotateY = ((x - centerX) / centerX) * 16;
-
       card.style.transform = `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
-      card.style.boxShadow = `${-rotateY * 1.5}px ${rotateX * 1.5}px 45px rgba(255, 105, 180, 0.38), inset 0 0 22px rgba(255, 255, 255, 0.12)`;
-
-      // Position radial glare spotlight
       const glareX = (x / rect.width) * 100;
       const glareY = (y / rect.height) * 100;
       glare.style.setProperty('--glare-x', `${glareX}%`);
       glare.style.setProperty('--glare-y', `${glareY}%`);
-glare.style.setProperty('--glare-opacity', '0.85');
-}
-function reset3DCard() {
-card.style.transform = 'rotateX(0deg) rotateY(0deg)';
-card.style.boxShadow = '0 15px 45px rgba(255, 105, 180, 0.25), inset 0 0 20px rgba(255, 255, 255, 0.05)';
-glare.style.setProperty('--glare-opacity', '0.25');
-}
-// Desktop Mouse Movement
-document.addEventListener('mousemove', (e) => {
-update3DCard(e.clientX, e.clientY);
-});
-document.addEventListener('mouseleave', reset3DCard);
-// Mobile Touch Drag Movement
-document.addEventListener('touchmove', (e) => {
-if (e.touches.length > 0) {
-update3DCard(e.touches[0].clientX, e.touches[0].clientY);
-}
-}, { passive: true });
-document.addEventListener('touchend', reset3DCard);
-// Audio & Heart Burst Logic
-function startAudio() {
-if (!isPlaying) {
-music.play().then(() => {
-isPlaying = true;
-musicBtn.innerText = '🎵';
-if (tapHint) tapHint.style.display = 'none';
-}).catch(() => {});
-}
-}
-function handleInteraction(e) {
-if (e.target.closest('#musicBtn')) return;
-const now = Date.now();
-if (now - lastInteraction < 250) return;
-lastInteraction = now;
-for (let i = 0; i < 12; i++) {
-createHeart();
-}
-startAudio();
-}
-document.body.addEventListener('touchstart', (e) => {
-if (e.touches.length > 0) {
-update3DCard(e.touches[0].clientX, e.touches[0].clientY);
-}
-handleInteraction(e);
-}, { passive: true });
-document.body.addEventListener('click', handleInteraction);
-musicBtn.addEventListener('click', function(e) {
-e.stopPropagation();
+      glare.style.setProperty('--glare-opacity', '0.85');
+    }
+
+    function reset3DCard() {
+      card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+      glare.style.setProperty('--glare-opacity', '0.3');
+    }
+
+    document.addEventListener('mousemove', (e) => { update3DCard(e.clientX, e.clientY); });
+    document.addEventListener('mouseleave', reset3DCard);
+    document.addEventListener('touchmove', (e) => { if (e.touches.length > 0) { update3DCard(e.touches.clientX, e.touches.clientY); } }, { passive: true });
+    document.addEventListener('touchend', reset3DCard);
+
+    function startAudio() {
+      if (!isPlaying) {
+        music.play().then(() => {
+          isPlaying = true;
+          musicBtn.innerText = '🎵';
+          if (tapHint) tapHint.style.display = 'none';
+        }).catch(() => {});
+      }
+    }
+
+    function handleInteraction(e) {
+      if (e.target.closest('#musicBtn')) return;
+      const now = Date.now();
+      if (now - lastInteraction < 250) return;
+      lastInteraction = now;
+      for (let i = 0; i < 18; i++) { createHeart(); }
+      startAudio();
+    }
+
+    document.body.addEventListener('touchstart', (e) => {
+      if (e.touches.length > 0) { update3DCard(e.touches.clientX, e.touches.clientY); }
+      handleInteraction(e);
+    }, { passive: true });
+    document.body.addEventListener('click', handleInteraction);
+
+    musicBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
 if (isPlaying) {
 music.pause();
 isPlaying = false;
@@ -386,15 +144,18 @@ if (tapHint) tapHint.style.display = 'none';
 function createHeart() {
 const heart = document.createElement('div');
 heart.classList.add('bg-heart');
-const emojis = ['❤️', '💖', '✨', '💕', '💫'];
+const emojis = ['❤️', '💖', '💕', '💗', '💓', '✨'];
 heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-heart.style.left = (Math.random() * 94 + 2) + 'vw';
-heart.style.animationDuration = (Math.random() * 3 + 3.5) + 's';
-heart.style.fontSize = (Math.random() * 1.2 + 1) + 'rem';
+heart.style.left = (Math.random() * 96 + 1) + 'vw';
+const duration = Math.random() * 2.5 + 3.5;
+heart.style.animationDuration = duration + 's';
+heart.style.fontSize = (Math.random() * 1.3 + 0.9) + 'rem';
 document.body.appendChild(heart);
-setTimeout(() => {
-heart.remove();
-}, 6500);
+setTimeout(() => { heart.remove(); }, duration * 1000);
 }
-setInterval(createHeart, 750);
-<div class="tap-hint" id="tapHint">Tap or move across card ✨</div>
+// Initial heart shower on page load
+for (let i = 0; i < 20; i++) {
+setTimeout(createHeart, i * 150);
+}
+// Continuous shower of hearts across the whole screen
+setInterval(createHeart, 250);
